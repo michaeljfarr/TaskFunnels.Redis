@@ -9,8 +9,10 @@ namespace TaskFunnels.Redis
         /// </summary>
         (bool sent, bool clients) TrySendMessage<T>(string parentPipeName, string childPipeName, T body,
             int maxListLength = int.MaxValue, TimeSpan? expiry = null);
+
         bool LockExtend<T>(RedisPipeValue<T> value, TimeSpan lockExpiry);
         bool LockRelease<T>(RedisPipeValue<T> value, bool success);
+
         /// <summary>
         /// Receive a message from a specific child pipe, ensuring that no other message is currently being processed from the same pipe.
         /// If a lock can be created for the childPipe, either pop or peak a message from the left.
@@ -22,6 +24,7 @@ namespace TaskFunnels.Redis
         /// Also, issues with infrastructure can lead to the lock being lost, so in general it is important to assume that messages
         /// will be processed at least once.
         /// </remarks>
-        RedisPipeValue<T> TryReadMessage<T>(bool peak, string parentPipeName, string childPipeName, TimeSpan lockExpiry);
+        RedisPipeValue<T> TryReadMessage<T>(bool peak, string parentPipeName, string childPipeName,
+            TimeSpan lockExpiry);
     }
 }
